@@ -28,14 +28,14 @@ def test_exact():
     assert new_data == ["A_X", "A_Y", "B_X", "B_Y"]
 
 
-def test_iter_3perc():
+def test_iter_30perc():
     idxs = iterative_stratified_sampling(test_data, ref_data, frac=0.3077, exact=False)
     new_data = test_data[:, idxs]
     new_data = list(map("_".join, zip(*new_data)))
     assert new_data == ["A_X", "A_Y", "B_X", "B_Y"]
 
 
-def test_iter_1perc():
+def test_iter_20perc():
     with pytest.warns(UserWarning):
         idxs = iterative_stratified_sampling(test_data, ref_data, frac=0.231, exact=False)
     new_data = test_data[:, idxs]

@@ -21,7 +21,8 @@ def _get_groups_weights(data, ref_data):
     """
     data = np.array(data, dtype=str)
     ref_data = np.array(ref_data, dtype=str)
-    data, ref_data = _match_groups_encoding(data, ref_data)
+    # data, ref_data = _match_groups_encoding(data, ref_data)
+    data = np.array(data, dtype=int)
     if len(data.shape) > 1:
         raise ValueError(f"Wrong input: data must be 1d list or 1d ndarray. Passed: {data.shape}.")
     ref_data = np.array(ref_data, dtype=int)
@@ -76,8 +77,11 @@ def _iterative_stratified_sampling(data, ref_weights, frac=0.8, random_state=42)
 def _exact_stratified_sampling(data, weights, random_state=42):
     """Exactly match the objective distribution by randomly choosing the number of samples from each group that is coded
     as relative portions of the original length in weights.
+    IMPORTANT NOTE: This method is only approximately giving the right result, as the values may become complex float
+    numbers and slight numerical errors occur due to rounding etc.
     """
     num_to_sample = (weights / np.max(weights))
+    num_to_sample = num_to_sample.astype(np.float32)
     rng = np.random.default_rng(random_state)
     idxs = []
     for n, frac in enumerate(num_to_sample):
@@ -90,6 +94,8 @@ def _exact_stratified_sampling(data, weights, random_state=42):
 
 def iterative_stratified_sampling(data, ref_data, frac=0.8, random_state=42, exact=True):
     """Perform stratified sampling based on the given data by considering the distribution of ref_data.
+    IMPORTANT NOTE: This method is only approximately giving the right result, as the values may become complex float
+    numbers and slight numerical errors occur due to rounding etc.
 
     Parameters
     ----------
